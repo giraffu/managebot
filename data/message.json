@@ -1,0 +1,8 @@
+{
+    "welcome_message": "{user_name}！，恭喜您加入本群，可以欣赏到小母狗在各种场景姿势下的操作使用视频，并且有机会亲身实操一番。",
+    "warn_message": "{user_name}，请注意言辞！这是你的第 {warn_count} 次警告。",
+    "mute_message": "{user_name}，你已连续违规3次，已被禁言！",
+    "unmuted_notice": "✅ 你已被解除禁言，可以正常发言。",
+
+    "bad_words": ["点击", "头像", "主页", "主业", "简介", "直播", "日结", "咨询", "小学生", "uu", "幼"]
+  }
