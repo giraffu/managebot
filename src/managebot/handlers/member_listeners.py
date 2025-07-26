@@ -7,6 +7,7 @@ from managebot.message_loader import get_message
 from telegram.ext import ContextTypes
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from managebot.utils.permissions import update_user_permissions
+from managebot.utils.menu import build_main_menu
 
 async def welcome_and_add_user(update, context):
     status = load_user_status()
@@ -34,7 +35,7 @@ async def welcome_and_add_user(update, context):
         welcome_text = welcome_template.format(user_name=user_name)
         welcome_msg = await update.message.reply_text(welcome_text)
         asyncio.create_task(delete_message_after_delay(
-            context, welcome_msg.chat.id, welcome_msg.message_id, 10
+            context, welcome_msg.chat.id, welcome_msg.message_id, 180
         ))
 
         # 发送滑块验证按钮
@@ -47,7 +48,7 @@ async def welcome_and_add_user(update, context):
             reply_markup=keyboard
         )
         asyncio.create_task(delete_message_after_delay(
-            context, verify_msg.chat.id, verify_msg.message_id, 60
+            context, verify_msg.chat.id, verify_msg.message_id, 180
         ))
 
     if added:
@@ -79,7 +80,12 @@ async def verify_callback(update: Update, context):
                 role="normal",
                 bot=context.bot
             )
-            await query.edit_message_text("✅ 验证通过，已解除限制，欢迎加入！")
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text="✅ 验证通过，已解除限制，欢迎加入！",
+                reply_markup=build_main_menu(str(update.effective_user.id)),  # 传入用户 ID
+                reply_to_message_id=query.message.message_id  # ✅ 回复原按钮消息
+            )
         except Exception as e:
             print(f"解除禁言失败: {e}")
             await query.edit_message_text("❌ 验证失败，请联系管理员")
